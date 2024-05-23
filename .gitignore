@@ -1,0 +1,8 @@
+# Editors and IDE's
+.idea
+.vscode
+
+# Stupid annoyances
+.DS_Store
+
+
