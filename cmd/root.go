@@ -16,7 +16,10 @@ limitations under the License.
 package cmd
 
 import (
+	"context"
 	"fmt"
+	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/config"
 	"os"
 
 	"github.com/spf13/cobra"
@@ -42,6 +45,7 @@ func Execute() {
 }
 
 var cfgFile string
+var awsConfig aws.Config
 
 func init() {
 	cobra.OnInitialize(initConfig)
@@ -71,4 +75,9 @@ func initConfig() {
 	if err := viper.ReadInConfig(); err == nil {
 		fmt.Fprintln(os.Stderr, "Using config file:", viper.ConfigFileUsed())
 	}
+
+	// Load AWS config as a global for all functions in CMD
+	awsDefaultConfig, loadConfigErr := config.LoadDefaultConfig(context.TODO())
+	cobra.CheckErr(loadConfigErr)
+	awsConfig = awsDefaultConfig
 }

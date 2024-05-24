@@ -20,7 +20,6 @@ import (
 	"context"
 	"fmt"
 	"github.com/aws/aws-sdk-go-v2/aws"
-	"github.com/aws/aws-sdk-go-v2/config"
 	"github.com/aws/aws-sdk-go-v2/service/sts"
 	"github.com/spf13/cobra"
 )
@@ -32,10 +31,7 @@ var rootWhoCmd = &cobra.Command{
 	Long:  `fetches your STS identity for the selected or default AWS profile`,
 	Run: func(cmd *cobra.Command, args []string) {
 
-		config, loadConfigErr := config.LoadDefaultConfig(context.TODO())
-		cobra.CheckErr(loadConfigErr)
-
-		stsClient := sts.NewFromConfig(config)
+		stsClient := sts.NewFromConfig(awsConfig)
 		identity, getCallerIdErr := stsClient.GetCallerIdentity(context.TODO(), &sts.GetCallerIdentityInput{})
 		cobra.CheckErr(getCallerIdErr)
 
