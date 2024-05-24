@@ -17,7 +17,6 @@ limitations under the License.
 package cmd
 
 import (
-	libs "awsreport/libs"
 	"context"
 	"fmt"
 	"github.com/aws/aws-sdk-go-v2/aws"
@@ -33,11 +32,13 @@ var rootWhoCmd = &cobra.Command{
 	Long:  `fetches your STS identity for the selected or default AWS profile`,
 	Run: func(cmd *cobra.Command, args []string) {
 
-		config, err := config.LoadDefaultConfig(context.TODO())
-		libs.ErrorExit(err)
+		config, loadConfigErr := config.LoadDefaultConfig(context.TODO())
+		cobra.CheckErr(loadConfigErr)
+
 		stsClient := sts.NewFromConfig(config)
-		identity, _ := stsClient.GetCallerIdentity(context.TODO(), &sts.GetCallerIdentityInput{})
-		libs.ErrorExit(err)
+		identity, getCallerIdErr := stsClient.GetCallerIdentity(context.TODO(), &sts.GetCallerIdentityInput{})
+		cobra.CheckErr(getCallerIdErr)
+
 		fmt.Printf("AWS STS UserID:  %v\n", aws.ToString(identity.UserId))
 		fmt.Printf("AWS STS Account: %v\n", aws.ToString(identity.Account))
 		fmt.Printf("AWS STS ARN:     %v\n", aws.ToString(identity.Arn))
