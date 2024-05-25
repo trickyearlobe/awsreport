@@ -46,11 +46,13 @@ func Execute() {
 
 var cfgFile string
 var awsConfig aws.Config
+var awsProfileName string
 
 func init() {
 	cobra.OnInitialize(initConfig)
 	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.awsreport.yaml)")
-	rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	//rootCmd.PersistentFlags().StringVar(&awsProfileName, "profile", "", "AWS profile name")
+	rootCmd.PersistentFlags().String("profile", "", "AWS profile name")
 }
 
 // initConfig reads in config file and ENV variables if set.
@@ -73,11 +75,16 @@ func initConfig() {
 
 	// If a config file is found, read it in.
 	if err := viper.ReadInConfig(); err == nil {
-		fmt.Fprintln(os.Stderr, "Using config file:", viper.ConfigFileUsed())
+		_, _ = fmt.Fprintln(os.Stderr, "Using config file:", viper.ConfigFileUsed())
 	}
 
 	// Load AWS config as a global for all functions in CMD
-	awsDefaultConfig, loadConfigErr := config.LoadDefaultConfig(context.TODO())
+	err := viper.BindPFlag("profile", rootCmd.Flags().Lookup("profile"))
+	cobra.CheckErr(err)
+	awsDefaultConfig, loadConfigErr := config.LoadDefaultConfig(
+		context.TODO(),
+		config.WithSharedConfigProfile(viper.GetString("profile")),
+	)
 	cobra.CheckErr(loadConfigErr)
 	awsConfig = awsDefaultConfig
 }
