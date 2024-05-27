@@ -17,7 +17,6 @@ package cmd
 
 import (
 	"context"
-	"fmt"
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/config"
 	"os"
@@ -58,27 +57,20 @@ func init() {
 // initConfig reads in config file and ENV variables if set.
 func initConfig() {
 	if cfgFile != "" {
-		// Use config file from the flag.
 		viper.SetConfigFile(cfgFile)
 	} else {
-		// Find home directory.
 		home, err := os.UserHomeDir()
 		cobra.CheckErr(err)
-
-		// Search config in home directory with name ".awsreport" (without extension).
 		viper.AddConfigPath(home)
 		viper.SetConfigType("yaml")
 		viper.SetConfigName(".awsreport")
 	}
 
-	viper.AutomaticEnv() // read in environment variables that match
+	// Read ENV vars and config file if either exist
+	viper.AutomaticEnv()
+	_ = viper.ReadInConfig()
 
-	// If a config file is found, read it in.
-	if err := viper.ReadInConfig(); err == nil {
-		_, _ = fmt.Fprintln(os.Stderr, "Using config file:", viper.ConfigFileUsed())
-	}
-
-	// Load AWS config as a global for all functions in CMD
+	// Load AWS config as a global for all functions in "cmd" package
 	err := viper.BindPFlag("profile", rootCmd.Flags().Lookup("profile"))
 	cobra.CheckErr(err)
 	awsDefaultConfig, loadConfigErr := config.LoadDefaultConfig(
