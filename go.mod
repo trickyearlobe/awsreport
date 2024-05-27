@@ -5,6 +5,8 @@ go 1.22
 require (
 	github.com/aws/aws-sdk-go-v2 v1.27.0
 	github.com/aws/aws-sdk-go-v2/config v1.27.15
+	github.com/aws/aws-sdk-go-v2/service/cognitoidentity v1.23.11
+	github.com/aws/aws-sdk-go-v2/service/cognitoidentityprovider v1.38.3
 	github.com/aws/aws-sdk-go-v2/service/identitystore v1.23.9
 	github.com/aws/aws-sdk-go-v2/service/sso v1.20.8
 	github.com/aws/aws-sdk-go-v2/service/ssoadmin v1.25.9

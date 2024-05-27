@@ -50,7 +50,6 @@ func identityStoreUsers() []types.User {
 				NextToken:       nextToken,
 			})
 			cobra.CheckErr(err)
-			fmt.Printf("NextToken: %v\n", usersPage.NextToken)
 			userAccumulator = append(userAccumulator, usersPage.Users...)
 			nextToken = usersPage.NextToken
 		}
