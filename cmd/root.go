@@ -17,9 +17,10 @@ package cmd
 
 import (
 	"context"
+	"os"
+
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/config"
-	"os"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -45,12 +46,10 @@ func Execute() {
 
 var cfgFile string
 var awsConfig aws.Config
-var awsProfileName string
 
 func init() {
 	cobra.OnInitialize(initConfig)
 	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.awsreport.yaml)")
-	//rootCmd.PersistentFlags().StringVar(&awsProfileName, "profile", "", "AWS profile name")
 	rootCmd.PersistentFlags().String("profile", "", "AWS profile name")
 }
 
